@@ -1,5 +1,5 @@
 import unittest
-from datetime import datetime
+from datetime import datetime, timedelta
 from src.modulo_pago import Pago, DetallePago, EstadoPago, EstadoConflicto, Conflicto
 
 
@@ -36,6 +36,20 @@ class TestConflicto(unittest.TestCase):
         self.assertEqual(self.conflicto.estado_conflicto.id_estado_conflicto, 1)
         self.assertEqual(self.conflicto.estado_conflicto.nombre_estado_conflicto, 'abierto')
         self.assertIsNone(self.conflicto.estado_conflicto.fecha_baja_estado_conflicto)
+        
+    def test_calcular_tiempo_transcurrido(self):
+        tiempo_transcurrido =  datetime.now() - self.conflicto.fecha
+        
+        if tiempo_transcurrido < timedelta(days=1):
+            tiempo = "Hoy"
+        elif tiempo_transcurrido < timedelta(days=7):
+            tiempo= f'Hace {tiempo_transcurrido.days} mes(es)'
+        elif tiempo_transcurrido < timedelta(days=30):
+            tiempo = f'Hace {tiempo_transcurrido.days // 7} mes(es)'
+        else:
+            tiempo = f'Hace {tiempo_transcurrido.days // 30} mes(es)'
+        
+        self.assertEqual(self.conflicto.calcular_tiempo_transcurrido(), tiempo)
 
 
 class TestPago(unittest.TestCase):
@@ -83,6 +97,16 @@ class TestDetallePago(unittest.TestCase):
         self.assertEqual(self.detalle_pago.monto, 100.0)
         self.assertEqual(self.detalle_pago.factura, 'F001')
 
+    def test_generar_resumen(self):
+        resumen_esperado = (
+        "Resumen del Detalle de Pago nro 101:\n"
+        "Titular: John Doe\n"
+        "Cuotas: 12\n"
+        "Monto: 100.0\n"
+        "Factura: F001"
+        )
+        
+        self.assertEqual(self.detalle_pago.generar_resumen(), resumen_esperado)
 
 if __name__ == '__main__':
     unittest.main()

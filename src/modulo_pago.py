@@ -1,6 +1,6 @@
 # Archivo: models.py
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class EstadoPago:
@@ -37,6 +37,22 @@ class Conflicto:
     def __repr__(self):
         return (f"Conflicto(id_conflicto={self.id_conflicto}, fecha={self.fecha}, "
                 f"nombre={self.nombre}, estado_conflicto={self.estado_conflicto})")
+        
+    def calcular_tiempo_transcurrido(self):
+        
+        tiempo_transcurrido = datetime.now() - self.fecha
+        
+        if tiempo_transcurrido < timedelta(days=1):
+            return "Hoy"
+        elif tiempo_transcurrido < timedelta(days=7):
+            return f"Hace {tiempo_transcurrido.days} días"
+        elif tiempo_transcurrido < timedelta(days=30):
+            semanas = tiempo_transcurrido.days // 7
+            return f"Hace {semanas} semana(s)"
+        else:
+            meses = tiempo_transcurrido.days // 30
+            return f"Hace {meses} mes(es)"
+        
 
 
 class Pago:
@@ -67,3 +83,12 @@ class DetallePago:
         return (f"DetallePago(id_detalle_pago={self.id_detalle_pago}, "
                 f"titular_tarjeta={self.titular_tarjeta}, cant_cuotas={self.cant_cuotas}, "
                 f"monto={self.monto}, factura={self.factura})")
+    
+    def generar_resumen(self):
+        return (f"Resumen del Detalle de Pago nro {self.id_detalle_pago}:\n"
+                f"Titular: {self.titular_tarjeta}\n"
+                f"Cuotas: {self.cant_cuotas}\n"
+                f"Monto: {self.monto}\n"
+                f"Factura: {self.factura}")
+
+
