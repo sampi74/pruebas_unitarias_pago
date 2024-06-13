@@ -36,7 +36,7 @@ class TestConflicto(unittest.TestCase):
         self.assertEqual(self.conflicto.estado_conflicto.id_estado_conflicto, 1)
         self.assertEqual(self.conflicto.estado_conflicto.nombre_estado_conflicto, 'abierto')
         self.assertIsNone(self.conflicto.estado_conflicto.fecha_baja_estado_conflicto)
-        
+
     def test_calcular_tiempo_transcurrido(self):
         tiempo_transcurrido =  datetime.now() - self.conflicto.fecha
         
@@ -50,6 +50,18 @@ class TestConflicto(unittest.TestCase):
             tiempo = f'Hace {tiempo_transcurrido.days // 30} mes(es)'
         
         self.assertEqual(self.conflicto.calcular_tiempo_transcurrido(), tiempo)
+
+    
+    def test_cambio_de_estado_conflicto(self):
+        estado_conflicto = EstadoConflicto(id_estado_conflicto=2,nombre_estado_conflicto='cerrado')
+        self.conflicto.cambiar_estado_conflicto(estado_conflicto=estado_conflicto)
+        
+        self.assertEqual(self.conflicto.estado_conflicto.id_estado_conflicto,2)
+        self.assertEqual(self.conflicto.estado_conflicto.nombre_estado_conflicto,'cerrado')
+        self.assertIsNone(self.conflicto.estado_conflicto.fecha_baja_estado_conflicto)
+
+
+
 
 
 class TestPago(unittest.TestCase):
@@ -82,7 +94,24 @@ class TestPago(unittest.TestCase):
 
     def test_pago_nombre_estado_pago(self):
         nombre_estado = Pago.ver_estado_pago(self.pago_sin_conflicto)
-        self.assertEqual(nombre_estado, "completado")
+        self.assertEqual(nombre_estado, 'completado')
+
+    def test_agregar_conflicto_a_pago(self):
+        estado_conflicto = EstadoConflicto(id_estado_conflicto=1, nombre_estado_conflicto='Resuelto')
+        conflicto = Conflicto(id_conflicto=1, fecha=datetime(2023, 6, 10), nombre='Conflicto de prueba',
+                              estado_conflicto=estado_conflicto)
+        self.pago_sin_conflicto.agregar_conflicto_a_pago(conflicto=conflicto)
+
+        self.assertIsNotNone(self.pago_sin_conflicto.conflicto)
+        self.assertEqual(self.pago_sin_conflicto.conflicto.id_conflicto,1)
+        self.assertEqual(self.pago_sin_conflicto.conflicto.nombre,'Conflicto de prueba')
+
+    def test_cambio_estado_pago(self):
+        estado_pago= EstadoPago(id_estado_pago=2,nombre_estado_pago='rechazado')
+        self.pago_con_conflicto.cambiar_estado_pago(estado_pago=estado_pago)
+
+        self.assertEqual(self.pago_con_conflicto.estado_pago.nombre_estado_pago,'rechazado')
+        self.assertEqual(self.pago_con_conflicto.estado_pago.id_estado_pago,2)
 
 
 class TestDetallePago(unittest.TestCase):

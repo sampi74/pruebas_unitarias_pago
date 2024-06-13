@@ -54,6 +54,9 @@ class Conflicto:
             return f"Hace {meses} mes(es)"
         
 
+    def cambiar_estado_conflicto(self,estado_conflicto):
+        self.estado_conflicto=estado_conflicto
+
 
 class Pago:
     def __init__(self, id_pago, estado_pago, fecha_pago, conflicto=None):
@@ -69,6 +72,12 @@ class Pago:
     def ver_estado_pago(self):
         nombre_estado = self.estado_pago.nombre_estado_pago
         return nombre_estado
+    
+    def agregar_conflicto_a_pago(self,conflicto):
+        self.conflicto=conflicto
+
+    def cambiar_estado_pago(self,estado_pago):
+        self.estado_pago=estado_pago
 
 
 class DetallePago:
