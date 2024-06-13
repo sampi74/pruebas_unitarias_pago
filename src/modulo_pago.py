@@ -113,7 +113,7 @@ class DetalleConflicto:
                 f"monto={self.monto}, estado_conflicto={self.estado_conflicto}, "
                 f"fecha_inicio_conflicto={self.fecha_inicio_conflicto}, fecha_fin_conflicto={self.fecha_fin_conflicto})")
     
-   def generar_resumen(self):
+    def generar_resumen(self):
         return (f"Resumen del Detalle de Conflicto nro {self.id_detalle_conflicto}:\n"
                 f"Monto: {self.monto}\n"
                 f"Estado Conflicto: {self.estado_conflicto.nombre_estado_conflicto}\n"
