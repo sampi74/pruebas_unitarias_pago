@@ -100,4 +100,24 @@ class DetallePago:
                 f"Monto: {self.monto}\n"
                 f"Factura: {self.factura}")
 
+class DetalleConflicto:
+    def __init__(self, id_detalle_conflicto, monto, estado_conflicto, fecha_inicio_conflicto, fecha_fin_conflicto=None):
+        self.id_detalle_conflicto = id_detalle_conflicto
+        self.monto = monto
+        self.estado_conflicto = estado_conflicto
+        self.fecha_inicio_conflicto = fecha_inicio_conflicto
+        self.fecha_fin_conflicto = fecha_fin_conflicto
 
+    def __repr__(self):
+        return (f"DetalleConflicto(id_detalle_conflicto={self.id_detalle_conflicto}, "
+                f"monto={self.monto}, estado_conflicto={self.estado_conflicto}, "
+                f"fecha_inicio_conflicto={self.fecha_inicio_conflicto}, fecha_fin_conflicto={self.fecha_fin_conflicto})")
+    
+    def generar_resumen(self):
+        return (f"Resumen del Detalle de Conflicto nro {self.id_detalle_conflicto}:\n"
+                f"Monto: {self.monto}\n"
+                f"Fecha Inicio: {self.fecha_inicio_conflicto}\n"
+                f"Fecha Fin: {self.fecha_fin_conflicto}")
+
+    def cambiar_estado_conflicto(self,estado_conflicto):
+        self.estado_conflicto=estado_conflicto

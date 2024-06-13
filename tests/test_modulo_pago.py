@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime, timedelta
-from src.modulo_pago import Pago, DetallePago, EstadoPago, EstadoConflicto, Conflicto
+from src.modulo_pago import Pago, DetallePago, EstadoPago, EstadoConflicto, Conflicto, DetalleConflicto
 
 
 class TestEstadoPago(unittest.TestCase):
@@ -116,6 +116,7 @@ class TestPago(unittest.TestCase):
 
 class TestDetallePago(unittest.TestCase):
     def setUp(self):
+        
         self.detalle_pago = DetallePago(id_detalle_pago=101, titular_tarjeta='John Doe', cant_cuotas=12, monto=100.0,
                                         factura='F001')
 
@@ -136,6 +137,30 @@ class TestDetallePago(unittest.TestCase):
         )
         
         self.assertEqual(self.detalle_pago.generar_resumen(), resumen_esperado)
+
+class TestDetalleConflicto(unittest.TestCase):
+    def setUp(self):
+        estado_conflicto = EstadoConflicto(id_estado_conflicto=1, nombre_estado_conflicto='abierto')
+        self.detalle_conflicto = DetalleConflicto(id_detalle_conflicto=1,monto=1000.0, estado_conflicto= estado_conflicto, 
+                                                  fecha_inicio_conflicto=datetime(2023, 6, 10))
+
+    def test_detalle_conflicto_attributes(self):
+        self.assertEqual(self.detalle_conflicto.id_detalle_conflicto, 1)
+        self.assertEqual(self.detalle_conflicto.monto, 1000.0)
+        self.assertEqual(self.detalle_conflicto.estado_conflicto.id_estado_conflicto, 1)
+        self.assertEqual(self.detalle_conflicto.estado_conflicto.nombre_estado_conflicto, 'abierto')
+        self.assertEqual(self.detalle_conflicto.fecha_inicio_conflicto, datetime(2023, 6, 10))
+        self.assertIsNone(self.detalle_conflicto.fecha_fin_conflicto)
+
+    def test_generar_resumen(self):
+        resumen_esperado = (
+            "Resumen del Detalle de Conflicto nro 1:\n"
+            "Monto: 1000.0\n"
+            "Estado Conflicto: abierto\n"
+            "Fecha Inicio: 2023-06-10 00:00:00\n"
+            "Fecha Fin: None"
+        )
+        self.assertEqual(self.detalle_conflicto.generar_resumen(), resumen_esperado)
 
 if __name__ == '__main__':
     unittest.main()
